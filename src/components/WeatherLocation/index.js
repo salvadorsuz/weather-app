@@ -1,23 +1,76 @@
-import React from 'react';
+import React, { Component }  from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { PropTypes } from 'prop-types';
 import Location from './Location';
 import WeatherData from './WeatherData';
+import transfromWeather from './../../services/transformWeather';
+import getUrlWeatherByCity from './../../services/getUrlWeatherByCity';
 import './styles.css';
-import {
-    SUN,
-} from './../../constants/weather';
 
-const data = {
-    temperature : 5,
-    weatherState : SUN,
-    humidity: 20,
-    wind: 10
+class WeatherLocation extends Component {
+
+  constructor(props) {
+    super(props);
+    const { city } = props;
+    this.state = {
+      city,
+      data: null,
+    }
+
+    console.log("constructor");
+  }
+
+  logFields = () => {
+    const { city } = this.state;
+    console.log(`City ${city}`);
+  }
+
+  handleUpdateClick = () => {
+    const api_weather = getUrlWeatherByCity(this.state.city);
+
+    console.log("consultar "+api_weather);
+
+    fetch(api_weather).then( resolve => {
+      return resolve.json();
+
+    }).then(data => {
+      const newWeather = transfromWeather(data);
+      console.log(newWeather);
+//      debugger;
+      this.setState({
+        data : newWeather
+      }, ()=> this.logFields());
+
+    }).catch( error => {
+      console.log(`Error api: ${error}`)
+    });
+
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+    this.handleUpdateClick() ;
+  }
+ 
+  componentDidUpdate(prevProps, prevState) {
+    console.log('componentDidUpdate');
+  }
+
+  render() {
+    console.log('render');
+    const { city, data } = this.state;
+    return (
+      <div className="weatherLocationCont">
+        <Location city={city} />
+        {data ? 
+          <WeatherData data={data} /> : 
+          <CircularProgress />
+        }
+      </div>
+    );
+  }
 }
-
-const WeatherLocation = () => (
-    <div className="weatherLocationCont">
-        <Location city={"Madrid"} />
-        <WeatherData data={data} />
-    </div>
-);
-
+WeatherLocation.propTypes = {
+  city: PropTypes.string.isRequired,
+}
 export default WeatherLocation;
