@@ -43,10 +43,10 @@ class ForecastExtended extends Component {
         ));
     }
 
-    loadForecast() {
+    updateCity = (city) => {
         //debugger;
         console.log('componentDidMount ForecastExtended');
-        const { city } = this.props;
+      
         const url =  getUrlForecastByCity(city);
 
         fetch(url).then( resolve => {
@@ -66,7 +66,16 @@ class ForecastExtended extends Component {
     }
 
     componentDidMount() {
-        this.loadForecast();
+        this.updateCity(this.props.city);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.city !== this.props.city) {
+            this.setState({
+                forecastData: null
+            });
+            this.updateCity(nextProps.city);
+        }
     }
 
     render() {
