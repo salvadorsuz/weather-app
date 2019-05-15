@@ -25,15 +25,16 @@ const data = {
 
 class ForecastExtended extends Component {
 
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
+            city: props.city,
             forecastData: null,
         }
     }
 
     renderForecastItemDays(forecastData) {
-        debugger;
+        //debugger;
         return forecastData.map( forecast => (
             <ForecastItem key={`${forecast.weekDay}${forecast.hour}`} 
                 weekDay={forecast.weekDay} 
@@ -45,8 +46,6 @@ class ForecastExtended extends Component {
 
     updateCity = (city) => {
         //debugger;
-        console.log('componentDidMount ForecastExtended');
-      
         const url =  getUrlForecastByCity(city);
 
         fetch(url).then( resolve => {
@@ -68,7 +67,7 @@ class ForecastExtended extends Component {
     componentDidMount() {
         this.updateCity(this.props.city);
     }
-
+/*
     componentWillReceiveProps(nextProps) {
         if(nextProps.city !== this.props.city) {
             this.setState({
@@ -77,10 +76,27 @@ class ForecastExtended extends Component {
             this.updateCity(nextProps.city);
         }
     }
+*/
+
+    static getDerivedStateFromProps(nextProps, prevState){
+        if(nextProps.city!==prevState.city){
+            return {city : nextProps.city};
+        }
+        else return null;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.city !== this.state.city) {
+            this.setState({
+                forecastData: null
+            });
+            this.updateCity(this.state.city);
+        }
+    }
 
     render() {
-        const { city } = this.props;
-        const { forecastData} = this.state;
+        console.log("render forecast extended");
+        const { city, forecastData} = this.state;
         return (<div>
                     <h2 className='forecast-title'>Pronóstico extendido para {city}</h2>
                     {forecastData ?

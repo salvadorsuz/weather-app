@@ -6,6 +6,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import ForecastExtended from './components/ForecastExtended';
+import { setCity } from './actions';
+import { store } from './store';
 import './App.css';
 
 const cities = [
@@ -26,6 +28,8 @@ class App extends Component {
   handleSelectionLocation = city => {
     this.setState({city});
     console.log(`handleSelectionLocation ${city}`);
+
+    store.dispatch(setCity(city));
   }
 
   render() {
