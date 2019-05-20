@@ -1,30 +1,23 @@
-import React, { Component}  from 'react';
-import { PropTypes } from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ForecastItem from './ForecastItem/index';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import transformForecast from './../services/transformForecast';
-import getUrlForecastByCity from './../services/getUrlForecastByCity';
 import './styles.css';
 
-/* const days =[
-    'Lunes',
-    'Martes',
-    'Miercoles',
-    'Jueves',
-    'Viernes'
-]; 
 
-const data = {
-    temperature: 10,
-    weatherState: 'normal',
-    humidity: 15,
-    wind: 30,
+const renderForecastItemDays = (forecastData) => {
+    //debugger;
+    return forecastData.map( forecast => (
+        <ForecastItem key={`${forecast.weekDay}${forecast.hour}`} 
+            weekDay={forecast.weekDay} 
+            hour={forecast.hour} 
+            data={forecast.data}>
+        </ForecastItem>
+    ));
+}
 
-}; */
-
-
-class ForecastExtended extends Component {
-
+const ForecastExtended = ({ city, forecastData }) => (
+/*
     constructor(props) {
         super();
         this.state = {
@@ -32,18 +25,6 @@ class ForecastExtended extends Component {
             forecastData: null,
         }
     }
-
-    renderForecastItemDays(forecastData) {
-        //debugger;
-        return forecastData.map( forecast => (
-            <ForecastItem key={`${forecast.weekDay}${forecast.hour}`} 
-                weekDay={forecast.weekDay} 
-                hour={forecast.hour} 
-                data={forecast.data}>
-            </ForecastItem>
-        ));
-    }
-
     updateCity = (city) => {
         //debugger;
         const url =  getUrlForecastByCity(city);
@@ -67,16 +48,6 @@ class ForecastExtended extends Component {
     componentDidMount() {
         this.updateCity(this.props.city);
     }
-/*
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.city !== this.props.city) {
-            this.setState({
-                forecastData: null
-            });
-            this.updateCity(nextProps.city);
-        }
-    }
-*/
 
     static getDerivedStateFromProps(nextProps, prevState){
         if(nextProps.city!==prevState.city){
@@ -93,19 +64,16 @@ class ForecastExtended extends Component {
             this.updateCity(this.state.city);
         }
     }
-
-    render() {
-        console.log("render forecast extended");
-        const { city, forecastData} = this.state;
-        return (<div>
-                    <h2 className='forecast-title'>Pronóstico extendido para {city}</h2>
-                    {forecastData ?
-                        this.renderForecastItemDays(forecastData) :
-                        <CircularProgress />
-                    }
-                </div>);
-    }
-}
+*/
+    <div>
+        <h2 className='forecast-title'>Pronóstico extendido para {city}</h2>
+        {forecastData ?
+            renderForecastItemDays(forecastData) :
+            <CircularProgress />
+        }
+    </div>
+   
+);
 
 ForecastExtended.propTypes = {
     city: PropTypes.string.isRequired,
