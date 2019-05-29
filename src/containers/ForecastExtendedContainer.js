@@ -19,6 +19,9 @@ ForecastExtendedContainer.propTypes = {
     forecastData: PropTypes.array,
 };
 
-const mapStateToProps = state => ({ city: getCity(state), forecastData:  getForecastDataFromCities(state) });
+const mapStateToProps = state => ({ 
+    city: getCity(state), 
+    forecastData:  getForecastDataFromCities(state) 
+});
 
 export default connect(mapStateToProps, null)(ForecastExtendedContainer);
